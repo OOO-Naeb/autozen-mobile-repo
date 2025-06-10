@@ -20,7 +20,7 @@ const ConfirmBookingScreen = ({route, navigation}) => {
   const [statusMessage, setStatusMessage] = useState('');
   const handleConfirm = async () => {
     if (!selectedService || !selectedSubService || !selectedTimeObj) {
-      Alert.alert('Ошибка', 'Данные бронирования неполные.');
+      Alert.alert('Error', 'Data is not full.');
       return;
     }
 
@@ -43,12 +43,12 @@ const ConfirmBookingScreen = ({route, navigation}) => {
       };
 
       console.log('📦 ORDER PAYLOAD:', JSON.stringify(orderPayload, null, 2));
-      setStatusMessage('📤 Sending order...');
+      setStatusMessage('Sending order...');
 
       const response = await createOrder(orderPayload, token);
 
-      console.log('✅ Order response:', response);
-      setStatusMessage('✅ Order created');
+      console.log('Database response:', response);
+      setStatusMessage('Order created!');
 
       addToCart({
         name: selectedSubService.name,
@@ -59,10 +59,8 @@ const ConfirmBookingScreen = ({route, navigation}) => {
       Alert.alert('Confirmed', 'Your order was successfully created.');
       navigation.navigate('Home');
     } catch (error) {
-      console.error('❌ Order failed:', error.response?.data || error.message);
-      setStatusMessage(
-        `❌ Error: ${error.message || 'Failed to create order'}`,
-      );
+      console.error('Order failed:', error.response?.data || error.message);
+      setStatusMessage(`Error: ${error.message || 'Failed to create order'}`);
       Alert.alert('Error', 'Failed to create order.');
     }
   };

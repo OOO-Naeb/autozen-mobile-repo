@@ -24,7 +24,7 @@ const HeaderBack = () => {
         <Text style={styles.locationText}>Your Location</Text>
         <Text style={styles.cityText}>Almaty, KZ</Text>
       </View>
-      <View style={{width: 30}} /> {/* Центровка */}
+      <View style={{width: 30}} />
     </View>
   );
 };

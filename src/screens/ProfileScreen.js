@@ -48,18 +48,16 @@ const ProfileScreen = () => {
 
         const headers = {Authorization: `Bearer ${token}`};
 
-        // Получение пользователя
         try {
           const userRes = await axios.get(`${BASE_URL}/users/${userId}`, {
             headers,
           });
           setUser(userRes.data);
         } catch (err) {
-          console.error('❌ Failed to fetch user:', err.message);
+          console.error('Failed to fetch user:', err.message);
           setUser(null);
         }
 
-        // Получение заказов
         try {
           const ordersRes = await axios.get(
             `${ORDER_BASE_URL}/api/v1/orders/user/${userId}`,
@@ -67,11 +65,10 @@ const ProfileScreen = () => {
           );
           setOrders(ordersRes.data);
         } catch (err) {
-          console.error('❌ Failed to fetch orders:', err.message);
+          console.error('Failed to fetch orders:', err.message);
           setOrders([]);
         }
 
-        // Получение машин
         try {
           console.log('🧾 userId:', userId);
           console.log(typeof userId, typeof limit, typeof page);
@@ -86,11 +83,10 @@ const ProfileScreen = () => {
           );
           setCars(carsRes.data);
         } catch (err) {
-          console.error('❌ Failed to fetch cars:', err.message);
+          console.error('Failed to fetch cars:', err.message);
           setCars([]);
         }
 
-        // Получение моделей
         try {
           const modelsRes = await axios.get(`${BASE_URL}/cars/models`, {
             headers,
@@ -101,11 +97,11 @@ const ProfileScreen = () => {
           });
           setModelNames(modelMap);
         } catch (err) {
-          console.error('❌ Failed to fetch models:', err.message);
+          console.error('Failed to fetch models:', err.message);
           setModelNames({});
         }
       } catch (outerErr) {
-        console.error('❌ Unexpected error in fetchData:', outerErr.message);
+        console.error('Unexpected error in fetchData:', outerErr.message);
       } finally {
         setLoading(false);
       }
@@ -148,6 +144,7 @@ const ProfileScreen = () => {
 
       const payload = {
         ...carForm,
+        //unfortunately this is not final and is for testing
         engine_type: 'gasoline',
         engine_capacity: 1.8,
         transmission_type: 'automatic',

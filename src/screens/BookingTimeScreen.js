@@ -52,17 +52,17 @@ const BookingTimeScreen = ({route, navigation}) => {
   useEffect(() => {
     const loadAvailableSlots = async () => {
       if (!sessionId) {
-        setDebugMessage('❌ sessionId is undefined');
+        setDebugMessage('sessionId is undefined');
         return;
       }
 
       try {
         const raw = await getSessionDatesBySessionId(sessionId);
         setAvailableTimes(raw);
-        setDebugMessage(`✅ Загружено слотов: ${raw.length}`);
+        setDebugMessage(`Loaded slots: ${raw.length}`);
       } catch (e) {
         const msg = e?.response?.data?.message || e.message;
-        setDebugMessage(`❌ Ошибка API: ${msg}`);
+        setDebugMessage(`Error API: ${msg}`);
       }
     };
     loadAvailableSlots();
@@ -78,7 +78,7 @@ const BookingTimeScreen = ({route, navigation}) => {
     });
 
     if (!selectedTimeObj) {
-      Alert.alert('Ошибка', 'Не удалось найти выбранное время.');
+      Alert.alert('Error', 'Cannot accept chosen time.');
       return;
     }
 
@@ -112,14 +112,14 @@ const BookingTimeScreen = ({route, navigation}) => {
         s.amountOfSessions > 0;
 
       if (match) {
-        console.log('✅ MATCH:', {
+        console.log('MATCH:', {
           selectedDate,
           slot,
           sessionTime,
           sessionDate: s.sessionDate,
         });
       } else {
-        console.log('⛔ NO MATCH:', {
+        console.log('NO MATCH:', {
           selectedDate,
           slot,
           sessionTime,

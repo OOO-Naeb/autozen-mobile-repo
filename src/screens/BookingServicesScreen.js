@@ -12,19 +12,18 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context';
 import HeaderBack from '../components/HeaderBack';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import {getSessionsByCompanyId} from '../api/sessionApi'; // Подключение API
+import {getSessionsByCompanyId} from '../api/sessionApi';
 
 const BookingServiceScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const {selectedService} = route.params; // содержит данные о СТО (компании)
+  const {selectedService} = route.params;
   const [subServices, setSubServices] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        // Временная заглушка companyId, пока selectedService не содержит ID явно
         const companyId =
           selectedService?.companyId || '43f65cec-13c6-44ba-92c1-971202091f44';
         const data = await getSessionsByCompanyId(companyId);
@@ -32,7 +31,7 @@ const BookingServiceScreen = () => {
         const mapped = data.map(session => ({
           id: session.id,
           name: session.name,
-          price: 'от 7000 KZT', // можно заменить на session.price если появится
+          price: 'от 7000 KZT',
           description: session.description,
         }));
 

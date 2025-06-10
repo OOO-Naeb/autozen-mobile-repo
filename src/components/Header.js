@@ -7,7 +7,6 @@ const Header = () => {
 
   return (
     <View style={styles.header}>
-      {/* Иконка профиля */}
       <TouchableOpacity
         style={styles.iconContainer}
         onPress={() => navigation.navigate('Profile')}>
@@ -17,13 +16,11 @@ const Header = () => {
         />
       </TouchableOpacity>
 
-      {/* Локация */}
       <View style={styles.locationContainer}>
         <Text style={styles.locationText}>Your Location</Text>
         <Text style={styles.cityText}>Almaty, KZ</Text>
       </View>
 
-      {/* Иконка настроек */}
       <TouchableOpacity
         style={styles.iconContainer}
         onPress={() => navigation.navigate('Settings')}>

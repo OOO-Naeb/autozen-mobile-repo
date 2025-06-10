@@ -14,8 +14,8 @@ const MapScreen = () => {
     <SafeAreaView style={styles.container}>
       <View style={styles.container}>
         <Header />
-        {/* Три маленькие пилюли */}
         <View style={styles.pillsContainer}>
+          //these buttons are not working btw
           <TouchableOpacity style={styles.pill}>
             <Text style={styles.pillText}>Oil Refill</Text>
           </TouchableOpacity>
@@ -27,7 +27,6 @@ const MapScreen = () => {
           </TouchableOpacity>
         </View>
 
-        {/* Карта */}
         <View style={styles.mapContainer}>
           <TouchableOpacity
             onPress={handleMapPress}

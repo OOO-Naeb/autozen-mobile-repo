@@ -57,7 +57,6 @@ const SettingsScreen = () => {
       <HeaderBack />
 
       <View style={styles.container}>
-        {/* Car Color Dropdown */}
         <TouchableOpacity onPress={() => setCarColorOpen(!isCarColorOpen)}>
           <View style={styles.pill}>
             <View style={styles.rowBetween}>
@@ -72,7 +71,6 @@ const SettingsScreen = () => {
             </View>
           </View>
         </TouchableOpacity>
-
         {isCarColorOpen && (
           <View style={styles.dropdownGrid}>
             {carColors.map(color => (
@@ -85,8 +83,7 @@ const SettingsScreen = () => {
             ))}
           </View>
         )}
-
-        {/* Language Switcher */}
+        //this is not working
         <View style={styles.pill}>
           <View style={{flexDirection: 'row', flex: 1}}>
             {['ENG', 'KAZ', 'RUS'].map(lang => (
@@ -109,8 +106,7 @@ const SettingsScreen = () => {
             ))}
           </View>
         </View>
-
-        {/* Static Settings Pills */}
+        //these are zaglushechki
         {['Location', 'FAQ', 'Contact Us'].map((item, index) => (
           <TouchableOpacity key={item}>
             <View style={index === 2 ? styles.lastpill : styles.pill}>

@@ -40,7 +40,7 @@ const ServiceDetailScreen = ({route}) => {
                 navigation.navigate('BookingService', {
                   selectedService: {
                     ...service,
-                    companyId: service.companyId || service.company?.id, // добавь сюда явно
+                    companyId: service.companyId || service.company?.id,
                   },
                 })
               }>

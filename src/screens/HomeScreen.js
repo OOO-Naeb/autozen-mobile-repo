@@ -14,8 +14,8 @@ const ORDER_BASE_URL = 'http://172.20.10.2:8087';
 const HomeScreen = () => {
   const navigation = useNavigation();
   const [carColor, setCarColor] = useState('#D9D9D9');
-  const [serviceStatus, setServiceStatus] = useState('in_progress'); // заглушка
-  const [daysUntilTO, setDaysUntilTO] = useState(75); // заглушка
+  const [serviceStatus, setServiceStatus] = useState(null);
+  const [daysUntilTO, setDaysUntilTO] = useState(75);
   const [userName, setUserName] = useState('User');
   const TO_INTERVAL_MINUTES = 1;
 
@@ -36,10 +36,10 @@ const HomeScreen = () => {
         if (res.data.length > 0) {
           setServiceStatus(res.data[0].orderStatus || 'waiting');
         } else {
-          setServiceStatus(null); // если нет заказов
+          setServiceStatus(null);
         }
       } catch (err) {
-        console.error('❌ Failed to fetch order status:', err.message);
+        console.error('Failed to fetch order status:', err.message);
         setServiceStatus(null);
       }
     };
@@ -69,8 +69,8 @@ const HomeScreen = () => {
 
   const handleResetTO = () => {
     Alert.alert(
-      'Reset TO Date',
-      'Are you sure you want to reset the TO timer?',
+      'Reset check-up date',
+      'Are you sure you want to reset the check-up timer?',
       [
         {text: 'Cancel', style: 'cancel'},
         {
@@ -201,12 +201,12 @@ const styles = StyleSheet.create({
   toContainer: {
     position: 'absolute',
     bottom: 20,
-    alignSelf: 'center', // <-- фикс: центрирование
+    alignSelf: 'center',
     width: 260,
     alignItems: 'center',
   },
   progressBarBackground: {
-    height: 10, // меньше по высоте
+    height: 10,
     width: '100%',
     borderRadius: 16,
     backgroundColor: '#ccc',

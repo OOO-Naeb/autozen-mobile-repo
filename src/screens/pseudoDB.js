@@ -1,4 +1,5 @@
 export const fetchServicesFromDB = () => {
+  //i used it for testing before databases were created
   return Promise.resolve([
     {
       id: 1,
