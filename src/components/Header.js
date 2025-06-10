@@ -1,21 +1,23 @@
 import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import {View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
 const Header = () => {
-  const navigation = useNavigation(); // Получаем объект навигации
+  const navigation = useNavigation();
 
   return (
     <View style={styles.header}>
-      {/* Иконка профиля (переход на ProfileScreen) */}
+      {/* Иконка профиля */}
       <TouchableOpacity
         style={styles.iconContainer}
         onPress={() => navigation.navigate('Profile')}>
-        <Icon name="account-circle" size={30} color="#fff" />
+        <Image
+          source={require('../../assets/icons/profile.png')}
+          style={styles.icon}
+        />
       </TouchableOpacity>
 
-      {/* Центральный блок с текстом */}
+      {/* Локация */}
       <View style={styles.locationContainer}>
         <Text style={styles.locationText}>Your Location</Text>
         <Text style={styles.cityText}>Almaty, KZ</Text>
@@ -25,7 +27,10 @@ const Header = () => {
       <TouchableOpacity
         style={styles.iconContainer}
         onPress={() => navigation.navigate('Settings')}>
-        <Icon name="settings" size={30} color="#fff" />
+        <Image
+          source={require('../../assets/icons/setting.png')}
+          style={styles.icon}
+        />
       </TouchableOpacity>
     </View>
   );
@@ -44,6 +49,11 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     padding: 10,
+  },
+  icon: {
+    width: 26,
+    height: 26,
+    tintColor: '#fff',
   },
   locationContainer: {
     justifyContent: 'center',

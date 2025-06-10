@@ -1,214 +1,150 @@
-import React, {useRef, useState} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  Animated,
-  PanResponder,
-  Alert,
-} from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import React from 'react';
+import {View, Text, StyleSheet, TextInput, Alert} from 'react-native';
 import Header from '../components/Header';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import {useCart} from '../screens/CartContext';
 
 const CartScreen = () => {
-  const [confirmed, setConfirmed] = useState(false);
-  const pan = useRef(new Animated.ValueXY()).current;
-  const swipeThreshold = -220; // Увеличенный порог для полного свайпа
+  const {cartItems, clearCart} = useCart();
 
-  const panResponder = PanResponder.create({
-    onMoveShouldSetPanResponder: () => true,
-    onPanResponderMove: Animated.event([null, {dx: pan.x}], {
-      useNativeDriver: false,
-    }),
-    onPanResponderRelease: (e, gesture) => {
-      if (gesture.dx < swipeThreshold) {
-        setConfirmed(true);
-        Alert.alert('Order Confirmed', 'Your payment has been processed.');
-        Animated.spring(pan, {
-          toValue: {x: swipeThreshold, y: 0},
-          useNativeDriver: false,
-        }).start();
-      } else {
-        Animated.spring(pan, {
-          toValue: {x: 0, y: 0},
-          useNativeDriver: false,
-        }).start();
-      }
-    },
-  });
+  const total = cartItems.reduce((sum, item) => sum + (item.price || 0), 0);
+
+  const handlePay = () => {
+    Alert.alert('Order Confirmed', 'Your payment has been processed.');
+    clearCart();
+  };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Header />
+      <View style={styles.containercart}>
+        <View style={styles.section}>
+          {cartItems.map((item, idx) => (
+            <View key={idx} style={styles.serviceCard}>
+              <Text style={styles.serviceTitle}>{item.name}</Text>
+              <Text style={styles.servicePrice}>{item.price} KZT</Text>
+            </View>
+          ))}
 
-      <View style={styles.serviceCard}>
-        <Text style={styles.serviceTitle}>Oil change</Text>
-        <Text style={styles.servicePrice}>7000 KZT</Text>
-      </View>
-
-      <View style={styles.serviceCard}>
-        <Text style={styles.serviceTitle}>Tire Change</Text>
-        <Text style={styles.servicePrice}>7000 KZT</Text>
-      </View>
-
-      <View style={styles.totalCard}>
-        <Text style={styles.totalText}>Total</Text>
-        <Text style={styles.totalAmount}>14000 KZT</Text>
-      </View>
-
-      <View style={styles.cardInputContainer}>
-        <Text style={styles.inputLabel}>Card Number</Text>
-        <TextInput style={styles.cardInput} keyboardType="numeric" />
-        <View style={styles.cardDetailsRow}>
-          <View style={styles.cardDetailInputWrapper}>
-            <Text style={styles.inputLabel}>Date</Text>
-            <TextInput style={styles.cardDetailInput} keyboardType="numeric" />
-          </View>
-          <View style={styles.cardDetailInputWrapper}>
-            <Text style={styles.inputLabel}>PIN</Text>
-            <TextInput
-              style={styles.cardDetailInput}
-              keyboardType="numeric"
-              secureTextEntry
-            />
+          <View style={styles.totalCard}>
+            <Text style={styles.totalText}>Total</Text>
+            <Text style={styles.totalAmount}>{total} KZT</Text>
           </View>
         </View>
-      </View>
 
-      <View style={styles.swipeContainer}>
-        <Animated.View
-          {...panResponder.panHandlers}
-          style={[styles.swipeCircle, {transform: [{translateX: pan.x}]}]}
-        />
-        <Text style={styles.swipeText}>
-          {confirmed ? 'Confirmed' : 'Swipe to Confirm'}
-        </Text>
+        <View style={styles.paymentCard}>
+          <Text style={styles.inputLabel}>Card Number</Text>
+          <TextInput style={styles.inputField} keyboardType="numeric" />
+
+          <View style={styles.cardRow}>
+            <View style={{flex: 1}}>
+              <Text style={styles.inputLabel}>Date</Text>
+              <TextInput style={styles.inputField} keyboardType="numeric" />
+            </View>
+            <View style={{width: 20}} />
+            <View style={{flex: 1}}>
+              <Text style={styles.inputLabel}>PIN</Text>
+              <TextInput
+                style={styles.inputField}
+                keyboardType="numeric"
+                secureTextEntry
+              />
+            </View>
+          </View>
+        </View>
+
+        <TouchableOpacity style={styles.payPill} onPress={handlePay}>
+          <Text style={styles.payText}>Pay</Text>
+        </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#202020',
-    paddingTop: 50,
-    paddingHorizontal: 20,
   },
-  topRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 20,
+  containercart: {
+    flex: 1,
+    backgroundColor: '#202020',
+    paddingHorizontal: 24,
   },
-  iconContainer: {
-    padding: 10,
-  },
-  locationContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  locationText: {
-    fontSize: 16,
-    color: '#E1E1E1',
-  },
-  cityText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#E1E1E1',
+  section: {
+    marginTop: 10,
+    gap: 12,
   },
   serviceCard: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
     backgroundColor: '#555A5D',
-    borderRadius: 50,
+    borderRadius: 30,
     paddingVertical: 20,
     paddingHorizontal: 20,
-    marginBottom: 15,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   serviceTitle: {
     color: '#fff',
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
   },
   servicePrice: {
     color: '#fff',
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
   },
   totalCard: {
-    backgroundColor: '#298800',
-    borderRadius: 50,
+    backgroundColor: '#198800',
+    borderRadius: 30,
     paddingVertical: 20,
     paddingHorizontal: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 20,
   },
   totalText: {
     color: '#fff',
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
   },
   totalAmount: {
     color: '#fff',
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
   },
-  cardInputContainer: {
+  paymentCard: {
     backgroundColor: '#555A5D',
-    borderRadius: 50,
+    borderRadius: 30,
     padding: 20,
-    marginBottom: 20,
+    marginTop: 20,
+    gap: 12,
   },
   inputLabel: {
     color: '#fff',
-    marginBottom: 5,
+    marginBottom: 4,
+    fontSize: 13,
   },
-  cardInput: {
+  inputField: {
     backgroundColor: '#E1E1E1',
     borderRadius: 10,
     padding: 10,
-    marginBottom: 15,
   },
-  cardDetailsRow: {
+  cardRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  cardDetailInputWrapper: {
-    width: '48%',
-  },
-  cardDetailInput: {
-    backgroundColor: '#E1E1E1',
-    borderRadius: 10,
-    padding: 10,
-  },
-  swipeContainer: {
-    backgroundColor: '#555A5D',
-    borderRadius: 50,
-    height: 90,
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
-    position: 'relative',
-    paddingHorizontal: 10,
-  },
-  swipeText: {
-    color: '#A0A0A0',
-    fontSize: 18,
-  },
-  swipeCircle: {
-    position: 'absolute',
-    left: 10,
-    width: 90, // Размер больше, как граница пилюли
-    height: 90, // Делаем больше
+  payPill: {
     backgroundColor: '#89AFCF',
     borderRadius: 50,
+    height: 80,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+    marginHorizontal: 30,
+  },
+  payText: {
+    color: '#fff',
+    fontSize: 22,
+    fontWeight: '600',
   },
 });
-
 export default CartScreen;

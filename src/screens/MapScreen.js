@@ -1,8 +1,9 @@
 import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-import MapView, {Marker} from 'react-native-maps'; // Импорт карты и маркера
+import MapView, {Marker} from 'react-native-maps';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Header from '../components/Header';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 const MapScreen = () => {
   const handleMapPress = () => {
@@ -10,42 +11,44 @@ const MapScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Header />
-      {/* Три маленькие пилюли */}
-      <View style={styles.pillsContainer}>
-        <TouchableOpacity style={styles.pill}>
-          <Text style={styles.pillText}>Oil Refill</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.pill}>
-          <Text style={styles.pillText}>Gas Refill</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.pill}>
-          <Text style={styles.pillText}>Tire Change</Text>
-        </TouchableOpacity>
-      </View>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
+        <Header />
+        {/* Три маленькие пилюли */}
+        <View style={styles.pillsContainer}>
+          <TouchableOpacity style={styles.pill}>
+            <Text style={styles.pillText}>Oil Refill</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.pill}>
+            <Text style={styles.pillText}>Gas Refill</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.pill}>
+            <Text style={styles.pillText}>Tire Change</Text>
+          </TouchableOpacity>
+        </View>
 
-      {/* Карта */}
-      <View style={styles.mapContainer}>
-        <TouchableOpacity
-          onPress={handleMapPress}
-          style={styles.mapBackgroundWrapper}>
-          <MapView
-            style={styles.mapBackground}
-            initialRegion={{
-              latitude: 43.222,
-              longitude: 76.8512,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
-            }}>
-            <Marker
-              coordinate={{latitude: 43.222, longitude: 76.8512}}
-              title="Almaty"
-            />
-          </MapView>
-        </TouchableOpacity>
+        {/* Карта */}
+        <View style={styles.mapContainer}>
+          <TouchableOpacity
+            onPress={handleMapPress}
+            style={styles.mapBackgroundWrapper}>
+            <MapView
+              style={styles.mapBackground}
+              initialRegion={{
+                latitude: 43.222,
+                longitude: 76.8512,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+              }}>
+              <Marker
+                coordinate={{latitude: 43.222, longitude: 76.8512}}
+                title="Almaty"
+              />
+            </MapView>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -53,8 +56,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#202020',
-    justifyContent: 'center',
-    paddingTop: 50,
   },
   topRow: {
     flexDirection: 'row',
@@ -95,7 +96,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   mapContainer: {
-    marginTop: 10,
+    marginTop: 30,
     alignItems: 'center',
     flex: 1,
     paddingHorizontal: 20,
@@ -103,7 +104,7 @@ const styles = StyleSheet.create({
   },
   mapBackgroundWrapper: {
     width: '100%',
-    height: 400,
+    height: 460,
     borderRadius: 55,
     overflow: 'hidden',
   },
