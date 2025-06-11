@@ -20,6 +20,7 @@ const BASE_URL = 'http://172.20.10.2:8001';
 const ORDER_BASE_URL = 'http://172.20.10.2:8087';
 
 const ProfileScreen = () => {
+  const [companyNames, setCompanyNames] = useState({});
   const [user, setUser] = useState(null);
   const [orders, setOrders] = useState([]);
   const [cars, setCars] = useState([]);
@@ -37,6 +38,34 @@ const ProfileScreen = () => {
   });
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
+
+  useEffect(() => {
+    const fetchCompanyNames = async () => {
+      const token = await AsyncStorage.getItem('token');
+      const headers = {Authorization: `Bearer ${token}`};
+
+      const names = {};
+
+      for (const order of orders) {
+        try {
+          const res = await axios.get(
+            `http://localhost:8086/api/v1/company/${order.companyId}`,
+            {headers},
+          );
+          names[order.companyId] = res.data.name;
+        } catch (err) {
+          console.warn('Failed to fetch company name for:', order.companyId);
+          names[order.companyId] = 'Unknown';
+        }
+      }
+
+      setCompanyNames(names);
+    };
+
+    if (orders.length > 0) {
+      fetchCompanyNames();
+    }
+  }, [orders]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -65,7 +94,6 @@ const ProfileScreen = () => {
           );
           setOrders(ordersRes.data);
         } catch (err) {
-          console.error('Failed to fetch orders:', err.message);
           setOrders([]);
         }
 
@@ -223,35 +251,16 @@ const ProfileScreen = () => {
       <View style={styles.contentBlock}>
         <ScrollView contentContainerStyle={styles.scroll}>
           <View style={styles.card}>
-            <Text style={styles.cardText}>Active orders</Text>
-            {orders.length === 0 ? (
-              <Text>No orders</Text>
-            ) : (
-              orders.map(order => (
-                <View key={order.id} style={{marginBottom: 10}}>
-                  <Text>Order ID: {order.id}</Text>
-                  <Text>Company ID: {order.companyId}</Text>
-                  <Text>Status: {order.orderStatus}</Text>
-                  <Text>Payment: {order.paymentType}</Text>
-                  <Text>Cost: {order.cost} ₸</Text>
-                  <Text>
-                    Date: {new Date(order.orderDate).toLocaleDateString()}
-                  </Text>
-                </View>
-              ))
-            )}
-          </View>
-
-          <View style={styles.card}>
             <Text style={styles.cardText}>Your cars</Text>
             {cars.length === 0 ? (
               <Text>No cars</Text>
             ) : (
               cars.map(car => (
                 <View key={car.id} style={{marginBottom: 10}}>
-                  <Text>Model: {modelNames[car.model_id] || 'X60'}</Text>
-                  <Text>Plate: {car.plate_number}</Text>
-                  <Text>Year: {car.year_of_production}</Text>
+                  <Text>
+                    {modelNames[car.model_id]}, {car.plate_number},{' '}
+                    {car.year_of_production}
+                  </Text>
                   <TouchableOpacity
                     style={{marginTop: 4}}
                     onPress={() => handleDeleteCar(car.id)}>
@@ -277,6 +286,27 @@ const ProfileScreen = () => {
               }}>
               <Text style={styles.addCarText}>Add Car</Text>
             </TouchableOpacity>
+          </View>
+
+          <View style={styles.card}>
+            <Text style={styles.cardText}>Active orders</Text>
+            {orders.length === 0 ? (
+              <Text>No orders</Text>
+            ) : (
+              orders.map(order => (
+                <View key={order.id} style={styles.ordercontainer}>
+                  <Text>
+                    Company: {companyNames[order.companyId] || order.companyId}
+                  </Text>
+                  <Text>Status: {order.orderStatus}</Text>
+                  <Text>Payment: {order.paymentType}</Text>
+                  <Text>Cost: {order.cost} ₸</Text>
+                  <Text>
+                    Date: {new Date(order.orderDate).toLocaleDateString()}
+                  </Text>
+                </View>
+              ))
+            )}
           </View>
         </ScrollView>
       </View>
@@ -396,6 +426,12 @@ const styles = StyleSheet.create({
     color: '#fff',
     marginTop: 140,
     marginLeft: 20,
+  },
+  ordercontainer: {
+    padding: 10,
+    marginBottom: 10,
+    backgroundColor: '#cccfce',
+    borderRadius: 20,
   },
   card: {
     backgroundColor: '#E1E1E1',

@@ -42,7 +42,7 @@ const ConfirmBookingScreen = ({route, navigation}) => {
         paymentType: 'online',
       };
 
-      console.log('📦 ORDER PAYLOAD:', JSON.stringify(orderPayload, null, 2));
+      console.log('ORDER PAYLOAD:', JSON.stringify(orderPayload, null, 2));
       setStatusMessage('Sending order...');
 
       const response = await createOrder(orderPayload, token);
@@ -57,7 +57,6 @@ const ConfirmBookingScreen = ({route, navigation}) => {
       });
 
       Alert.alert('Confirmed', 'Your order was successfully created.');
-      navigation.navigate('Home');
     } catch (error) {
       console.error('Order failed:', error.response?.data || error.message);
       setStatusMessage(`Error: ${error.message || 'Failed to create order'}`);

@@ -120,6 +120,7 @@ const LogReg = () => {
             Login
           </Text>
         </TouchableOpacity>
+        <Text style={{color: '#444', fontSize: 28, fontWeight: '600'}}>or</Text>
         <TouchableOpacity onPress={() => setIsLogin(false)}>
           <Text style={[styles.switchText, !isLogin && styles.activeText]}>
             Register
@@ -214,7 +215,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#202020',
-    paddingTop: 300,
+    paddingTop: 200,
     alignItems: 'center',
   },
   switchRow: {

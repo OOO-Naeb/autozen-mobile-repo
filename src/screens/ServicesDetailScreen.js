@@ -15,6 +15,14 @@ const ServiceDetailScreen = ({route}) => {
   const {service} = route.params;
   const navigation = useNavigation();
 
+  const imageMap = {
+    '0076ed3c-2dd2-4ffb-a9af-c0c288d5dbb0': require('../../assets/images/BrakeInspection.jpg'),
+    '3bc4a9db-2b90-4935-89cd-7dd065b050c4': require('../../assets/images/TireReplacement.png'),
+    '931c7ba6-7cb7-4975-a68e-90b1b22183e0': require('../../assets/images/BatteryCheck.jpg'),
+    'dba9a502-6b6d-47f5-a128-93b5b13a7239': require('../../assets/images/EngineCheck.jpg'),
+    'f15bbd94-1bfd-4d2d-8529-6c53840bec8e': require('../../assets/images/AirService.jpg'),
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <HeaderBack />
@@ -22,7 +30,7 @@ const ServiceDetailScreen = ({route}) => {
       <ScrollView contentContainerStyle={styles.scroll}>
         <View style={styles.card}>
           <Image
-            source={service.image}
+            source={imageMap[service.id]}
             style={styles.image}
             resizeMode="cover"
           />

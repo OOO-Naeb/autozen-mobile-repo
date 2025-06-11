@@ -17,35 +17,58 @@ const HomeScreen = () => {
   const [serviceStatus, setServiceStatus] = useState(null);
   const [daysUntilTO, setDaysUntilTO] = useState(75);
   const [userName, setUserName] = useState('User');
-  const TO_INTERVAL_MINUTES = 1;
+  const TO_INTERVAL_MINUTES = 2;
 
-  useEffect(() => {
-    const fetchOrderStatus = async () => {
-      try {
-        const token = await AsyncStorage.getItem('token');
-        const userId = await AsyncStorage.getItem('userId');
-        if (!token || !userId) return;
+  const fetchOrderStatus = async () => {
+    try {
+      const token = await AsyncStorage.getItem('token');
+      const userId = await AsyncStorage.getItem('userId');
+      if (!token || !userId) return;
 
-        const res = await axios.get(
-          `${ORDER_BASE_URL}/api/v1/orders/user/${userId}`,
-          {
-            headers: {Authorization: `Bearer ${token}`},
-          },
-        );
+      const res = await axios.get(
+        `${ORDER_BASE_URL}/api/v1/orders/user/${userId}`,
+        {
+          headers: {Authorization: `Bearer ${token}`},
+        },
+      );
 
-        if (res.data.length > 0) {
-          setServiceStatus(res.data[0].orderStatus || 'waiting');
-        } else {
-          setServiceStatus(null);
-        }
-      } catch (err) {
-        console.error('Failed to fetch order status:', err.message);
+      if (res.data.length > 0) {
+        setServiceStatus(res.data[0].orderStatus || 'waiting');
+      } else {
         setServiceStatus(null);
       }
-    };
+    } catch (err) {
+      setServiceStatus(null);
+    }
+  };
 
+  useEffect(() => {
     fetchOrderStatus();
   }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const loadData = async () => {
+        const savedColor = await AsyncStorage.getItem('carBodyColor');
+        const savedTODate = await AsyncStorage.getItem('lastTODate');
+        const savedName = await AsyncStorage.getItem('userName');
+        if (savedColor) setCarColor(savedColor);
+        if (savedName) setUserName(savedName);
+
+        if (savedTODate) {
+          const lastDate = new Date(savedTODate);
+          const now = new Date();
+          const diffMinutes = Math.floor((now - lastDate) / (1000 * 60));
+          setDaysUntilTO(Math.max(TO_INTERVAL_MINUTES - diffMinutes, 0));
+        }
+
+        // 👇 добавляем обновление статуса
+        await fetchOrderStatus();
+      };
+
+      loadData();
+    }, []),
+  );
 
   useFocusEffect(
     React.useCallback(() => {
